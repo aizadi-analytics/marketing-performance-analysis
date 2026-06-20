@@ -100,3 +100,27 @@ daily["roas"] = daily["revenue"] / daily["spend"]
 print("Daily metrics")
 print(daily.head())
 print(daily["roas"].describe())
+
+# Merge marketing data with channel mapping
+marketing_mapped = pd.merge(
+    marketing,
+    channel_mapping,
+    on="channel",
+    how="left"
+)
+
+# Marketing efficiency metrics
+marketing_mapped["ctr"] = marketing_mapped["clicks"] / marketing_mapped["impressions"]
+marketing_mapped["cpc"] = marketing_mapped["spend"] / marketing_mapped["clicks"]
+
+# Channel-level summary
+channel_summary = marketing_mapped.groupby("channel").agg(
+    total_spend=("spend", "sum"),
+    total_impressions=("impressions", "sum"),
+    total_clicks=("clicks", "sum"),
+    avg_ctr=("ctr", "mean"),
+    avg_cpc=("cpc", "mean")
+).sort_values("total_spend", ascending=False)
+
+print("Channel summary")
+print(channel_summary)
