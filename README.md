@@ -56,6 +56,16 @@ The dataset is synthetic and was created for practice purposes. It contains four
    - weekends versus weekdays
 7. Created time-series visualizations for daily and weekly trends.
 
+## Figures
+
+The analysis generates visualizations for:
+
+- daily revenue trend
+- daily marketing spend trend
+- weekly revenue trend
+
+Generated figures are stored in the `figures/` folder.
+
 ## Key learning points
 
 - Data cleaning is important before calculating business metrics.
