@@ -62,3 +62,41 @@ print(marketing.isna().sum())
 
 print("Sales duplicates after cleaning:", sales.duplicated().sum())
 print("Marketing duplicates after cleaning:", marketing.duplicated().sum())
+
+# Business metrics
+total_revenue = sales["revenue"].sum()
+total_spend = marketing["spend"].sum()
+total_orders = sales["orders"].sum()
+
+print("Total revenue:", round(total_revenue, 2))
+print("Total marketing spend:", round(total_spend, 2))
+print("Total orders:", int(total_orders))
+
+# Average Order Value
+sales["aov"] = sales["revenue"] / sales["orders"]
+
+# Daily sales
+daily_sales = sales.groupby("date").agg(
+    revenue=("revenue", "sum"),
+    orders=("orders", "sum")
+).reset_index()
+
+# Daily marketing spend
+daily_spend = marketing.groupby("date").agg(
+    spend=("spend", "sum")
+).reset_index()
+
+# Merge daily sales and daily spend
+daily = pd.merge(
+    daily_sales,
+    daily_spend,
+    on="date",
+    how="left"
+)
+
+# ROAS
+daily["roas"] = daily["revenue"] / daily["spend"]
+
+print("Daily metrics")
+print(daily.head())
+print(daily["roas"].describe())
