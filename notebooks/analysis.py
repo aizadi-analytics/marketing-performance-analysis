@@ -124,3 +124,64 @@ channel_summary = marketing_mapped.groupby("channel").agg(
 
 print("Channel summary")
 print(channel_summary)
+
+# Groupby analysis: revenue by store
+revenue_by_store = sales.groupby("store")["revenue"].sum().sort_values(ascending=False)
+
+print("Revenue by store")
+print(revenue_by_store)
+
+# Groupby analysis: revenue by product category
+revenue_by_category = sales.groupby("product_category")["revenue"].sum().sort_values(ascending=False)
+
+print("Revenue by product category")
+print(revenue_by_category)
+
+# Groupby analysis: spend by channel
+spend_by_channel = marketing.groupby("channel")["spend"].sum().sort_values(ascending=False)
+
+print("Spend by channel")
+print(spend_by_channel)
+
+# Promotion day flag
+promotion_days = marketing.groupby("date")["campaign_type"].apply(
+    lambda x: int((x == "promotion").any())
+).reset_index(name="is_promotion_day")
+
+# Add promotion flag to daily data
+daily = pd.merge(
+    daily,
+    promotion_days,
+    on="date",
+    how="left"
+)
+
+# Compare promotion vs non-promotion days
+promotion_comparison = daily.groupby("is_promotion_day").agg(
+    days=("date", "count"),
+    avg_revenue=("revenue", "mean"),
+    avg_spend=("spend", "mean"),
+    avg_roas=("roas", "mean")
+)
+
+print("Promotion vs non-promotion days")
+print(promotion_comparison)
+
+# Add calendar features to daily data
+daily = pd.merge(
+    daily,
+    calendar[["date", "is_weekend", "is_holiday", "weekday", "week", "month"]],
+    on="date",
+    how="left"
+)
+
+# Compare weekend vs weekday
+weekend_comparison = daily.groupby("is_weekend").agg(
+    days=("date", "count"),
+    avg_revenue=("revenue", "mean"),
+    avg_spend=("spend", "mean"),
+    avg_roas=("roas", "mean")
+)
+
+print("Weekend vs weekday")
+print(weekend_comparison)
