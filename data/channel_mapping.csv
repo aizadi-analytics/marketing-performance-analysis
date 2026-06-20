@@ -1,0 +1,6 @@
+channel,channel_type,funnel_stage
+Google Ads,paid_search,lower
+Meta Ads,paid_social,mid
+TV,offline,upper
+Email,owned,lower
+Influencer,creator,upper
