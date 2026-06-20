@@ -185,3 +185,48 @@ weekend_comparison = daily.groupby("is_weekend").agg(
 
 print("Weekend vs weekday")
 print(weekend_comparison)
+
+# Time-series plot: daily revenue
+daily.set_index("date")["revenue"].plot(
+    figsize=(10, 4),
+    title="Daily revenue"
+)
+
+plt.xlabel("Date")
+plt.ylabel("Revenue")
+plt.tight_layout()
+plt.show()
+
+# Time-series plot: daily marketing spend
+daily.set_index("date")["spend"].plot(
+    figsize=(10, 4),
+    title="Daily marketing spend"
+)
+
+plt.xlabel("Date")
+plt.ylabel("Spend")
+plt.tight_layout()
+plt.show()
+
+# Weekly aggregation
+weekly = daily.set_index("date").resample("W").agg({
+    "revenue": "sum",
+    "spend": "sum",
+    "orders": "sum"
+})
+
+weekly["roas"] = weekly["revenue"] / weekly["spend"]
+
+print("Weekly metrics")
+print(weekly.head())
+
+# Time-series plot: weekly revenue
+weekly["revenue"].plot(
+    figsize=(10, 4),
+    title="Weekly revenue"
+)
+
+plt.xlabel("Week")
+plt.ylabel("Revenue")
+plt.tight_layout()
+plt.show()
